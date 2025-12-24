@@ -1,0 +1,4 @@
+{
+  "name": "NutriTrack AI",
+  "description": "Calorie and macro tracker with local LLM extraction and nutrition lookups via Open Food Facts / USDA FDC."
+}

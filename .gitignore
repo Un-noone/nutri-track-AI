@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.vite/
+package-lock.json
+
+.env.local
+.env.*.local
+.env.*.production
+.env.*.development
+
+dockerfiles/*.env.local
+
+.idea/
+.DS_Store
