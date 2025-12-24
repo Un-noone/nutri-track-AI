@@ -16,7 +16,20 @@ export type FdcFood = {
   fdcId: number;
   description?: string;
   brandOwner?: string;
+  householdServingFullText?: string;
+  servingSize?: number;
+  servingSizeUnit?: string;
   foodNutrients?: FdcNutrient[];
+  foodPortions?: Array<{
+    gramWeight?: number;
+    modifier?: string;
+    portionDescription?: string;
+    sequenceNumber?: number;
+    measureUnit?: {
+      name?: string;
+      abbreviation?: string;
+    };
+  }>;
 };
 
 const FDC_CACHE_TTL_MS = 7 * 24 * 60 * 60 * 1000;

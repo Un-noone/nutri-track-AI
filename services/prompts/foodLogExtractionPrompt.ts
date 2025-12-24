@@ -31,7 +31,7 @@ DB/API lookup plan (critical):
   2) provider="fooddata_central", type="text", query should include product + brand (brandOwner-style wording)
 - If neither brand nor barcode:
   1) provider="fooddata_central", type="text", query is the normalized generic food name
-  2) provider="open_food_facts", type="text" as optional fallback only if the item sounds packaged (e.g., “biscotti”, “cereali”, “merendina”).
+  2) provider="open_food_facts", type="text" as optional fallback only if the item sounds packaged (e.g., “cookies”, “cereal”, “snack bar”).
 
 Normalization:
 - item_name should be in English.

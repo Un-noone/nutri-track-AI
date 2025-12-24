@@ -35,7 +35,7 @@ const stripTimeHints = (name: string) => {
 const splitSegments = (text: string) => {
   const cleaned = stripMealPrefix(text);
   return cleaned
-    .split(/\s*(?:,|;|\be\b|\band\b)\s+/i)
+    .split(/\s*(?:,|;|\band\b)\s+/i)
     .map(s => s.trim())
     .filter(Boolean);
 };
@@ -73,9 +73,33 @@ const deriveItemNameFromBarcodeText = (text: string) => {
   const withoutBarcode = text.replace(/\bbarcode\b/i, '').replace(BARCODE_RE, '');
   const cleaned = stripMealPrefix(withoutBarcode)
     .replace(/[.]/g, ' ')
+    .replace(/\b(i\s+ate|i\s+had|ate|had)\b/gi, ' ')
+    .replace(/\b\d+(?:[.,]\d+)?\b(?!\s*%)/g, ' ')
+    .replace(/\bx\b/gi, ' ')
     .replace(/\s+/g, ' ')
     .trim();
-  return cleaned.length > 0 ? cleaned : 'Prodotto';
+  return cleaned.length > 0 ? cleaned : 'Product';
+};
+
+const countFromBarcodeText = (text: string, barcode: string): number | null => {
+  const withoutBarcode = text.replace(barcode, '').replace(/\bbarcode\b/i, ' ');
+  const cleaned = stripMealPrefix(withoutBarcode).toLowerCase();
+
+  // Prefer patterns like "2 bars", "1 protein bar", "3x"
+  const m1 = cleaned.match(/\b(\d+(?:[.,]\d+)?)\s*(?:x\s*)?(?:protein\s+bar|protein\s+bars|bar|bars)\b/i);
+  if (m1) {
+    const n = parseNumber(m1[1]);
+    return n != null && n > 0 ? n : null;
+  }
+
+  // Fallback: any small number (avoid picking up the barcode digits).
+  const m2 = cleaned.match(/\b(\d+(?:[.,]\d+)?)\b/);
+  if (m2) {
+    const n = parseNumber(m2[1]);
+    if (n != null && n > 0 && n <= 50) return n;
+  }
+
+  return null;
 };
 
 export const fastExtractFoodLog = (args: {
@@ -94,13 +118,14 @@ export const fastExtractFoodLog = (args: {
   const barcodeMatch = userText.match(BARCODE_RE);
   if (barcodeMatch) {
     const barcode = barcodeMatch[1];
+    const qty = countFromBarcodeText(userText, barcode);
     return {
       meal,
       datetime_local: isoDatetime,
       items: [
         {
           item_name: deriveItemNameFromBarcodeText(userText),
-          qty: null,
+          qty,
           unit: null,
           brand: null,
           barcode,

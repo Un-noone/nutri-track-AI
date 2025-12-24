@@ -33,7 +33,7 @@ const buildSearchQuery = (fallback: string, itemName: string, brand: string | nu
 };
 
 const SOUNDS_PACKAGED_RE =
-  /\b(biscotti|biscotto|cereali|merendina|merendine|cracker|patatine|chips|barretta|barrette|cioccolato|gelato|bibita|bevanda|soda)\b/i;
+  /\b(cookie|cookies|cereal|granola|cracker|crackers|chips|crisps|protein\s*bar|protein\s*bars|snack\s*bar|snack\s*bars|chocolate|ice\s*cream|soda|soft\s*drink|energy\s*drink)\b/i;
 
 const soundsPackaged = (itemName: string) => SOUNDS_PACKAGED_RE.test(itemName);
 
@@ -70,7 +70,7 @@ const trySplitSingleItemFromUserText = (
 ): Array<Pick<FoodLogExtractionItem, 'item_name' | 'qty' | 'unit'>> | null => {
   const t = stripLeadingMealPrefix(compactSpaces(userText));
   // Conservative: split only when both sides clearly start with a quantity.
-  const match = t.match(/^(.*?)(?:\s+\be\b|\s+\band\b)\s+(.*)$/i);
+  const match = t.match(/^(.*?)(?:\s+\band\b)\s+(.*)$/i);
   if (!match) return null;
   const left = match[1].trim();
   const right = match[2].trim();
@@ -159,14 +159,10 @@ export const normalizeFoodLogExtraction = (
     dedupedItems.push(it);
   }
 
-  const firstMissingQty = dedupedItems.find((i) => i.qty == null || i.unit == null);
-  const needsClarification =
-    Boolean(extraction.needs_clarification) || Boolean(firstMissingQty);
-  const clarificationQuestion =
-    needsClarification
-      ? extraction.clarification_question ??
-        (firstMissingQty ? `For "${firstMissingQty.item_name}", how many grams?` : null)
-      : null;
+  // Do not force clarification here; the nutrition resolver will decide after attempting DB lookups
+  // (e.g., packaged foods may provide serving sizes that allow deterministic conversion).
+  const needsClarification = Boolean(extraction.needs_clarification);
+  const clarificationQuestion = needsClarification ? extraction.clarification_question ?? null : null;
 
   return {
     meal: extraction.meal,
