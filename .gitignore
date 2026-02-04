@@ -13,3 +13,5 @@ dockerfiles/*.env.local
 
 .idea/
 .DS_Store
+
+.vercel

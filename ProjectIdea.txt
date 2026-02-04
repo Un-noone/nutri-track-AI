@@ -85,3 +85,6 @@ FUTURE ENHANCEMENTS
 - Integration with fitness trackers
 - Weekly/monthly nutrition reports
 - Social features (share meals, challenges)
+
+
+Special Thanks to ciurlaro/nutri-track-AI
