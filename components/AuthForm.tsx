@@ -171,7 +171,7 @@ export const AuthForm: React.FC<Props> = ({ onAuthSuccess }) => {
 
         {/* Footer */}
         <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-6">
-          Powered by Google Gemini AI
+          Powered by Groq AI
         </p>
       </div>
     </div>
