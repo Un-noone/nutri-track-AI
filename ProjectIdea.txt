@@ -1,0 +1,87 @@
+NutriBuddy - AI-Powered Nutrition Tracking Application
+======================================================
+
+PROJECT OVERVIEW
+----------------
+NutriBuddy is a modern nutrition tracking web application that leverages
+artificial intelligence to help users log, analyze, and monitor their
+daily food intake effortlessly.
+
+CORE FEATURES
+-------------
+1. AI-Powered Food Recognition
+   - Upload food images for automatic identification
+   - Uses Llama 4 Scout vision model via Groq API
+   - Instantly extracts nutritional information from photos
+
+2. Natural Language Food Logging
+   - Type meals in plain English (e.g., "2 eggs and toast for breakfast")
+   - AI parses and calculates nutrition automatically
+   - Uses Llama 3.3-70b for text understanding
+
+3. Nutrition Dashboard
+   - Track calories, protein, carbs, and fat
+   - Visual progress charts using Recharts
+   - Daily/weekly nutrition goals
+
+4. User Authentication
+   - Secure user accounts with JWT authentication
+   - Personal meal history and preferences
+
+TECH STACK
+----------
+Frontend:
+- React 19 with TypeScript
+- Vite for fast development
+- Tailwind CSS for styling
+- Recharts for data visualization
+- Lucide React for icons
+
+Backend:
+- Python FastAPI
+- MongoDB with Motor (async driver)
+- Groq API for AI inference
+- JWT authentication with bcrypt
+
+AI Models (via Groq):
+- Vision: meta-llama/llama-4-scout-17b-16e-instruct
+- Text: llama-3.3-70b-versatile
+
+ARCHITECTURE
+------------
+nutri-track-AI/
+├── src/                  # React frontend
+├── backend/              # Python FastAPI backend
+│   ├── agents/           # AI food recognition logic
+│   ├── routers/          # API endpoints
+│   ├── models/           # Pydantic data models
+│   └── services/         # Business logic & auth
+├── server/               # Express.js (alternative backend)
+└── package.json          # Frontend dependencies
+
+GETTING STARTED
+---------------
+1. Frontend: npm run dev (runs on localhost:3005)
+2. Backend: python -m uvicorn main:app --reload --port 8000
+
+ENVIRONMENT VARIABLES NEEDED
+----------------------------
+- GROQ_API_KEY: API key for Groq AI services
+- MONGODB_URL: MongoDB connection string
+- JWT_SECRET: Secret key for JWT tokens
+
+PROJECT STATUS
+--------------
+- Core functionality: Complete
+- Food image analysis: Working
+- Text-based logging: Working
+- User authentication: Working
+- Nutrition tracking: Working
+
+FUTURE ENHANCEMENTS
+-------------------
+- Barcode scanning for packaged foods
+- Meal planning and suggestions
+- Integration with fitness trackers
+- Weekly/monthly nutrition reports
+- Social features (share meals, challenges)
