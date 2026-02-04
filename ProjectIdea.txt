@@ -1,6 +1,10 @@
 NutriBuddy - AI-Powered Nutrition Tracking Application
 ======================================================
 
+LIVE DEMO
+---------
+Visit the webapp: https://nutribuddy-app.vercel.app
+
 PROJECT OVERVIEW
 ----------------
 NutriBuddy is a modern nutrition tracking web application that leverages
