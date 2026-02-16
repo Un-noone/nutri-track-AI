@@ -9,6 +9,11 @@ import {
   User,
 } from "../types";
 
+// API Base URL - use Render backend in production
+const API_BASE_URL = import.meta.env.PROD
+  ? "https://nutri-track-ai.onrender.com"
+  : "";
+
 // Token storage
 let authToken: string | null = localStorage.getItem("auth_token");
 
@@ -36,7 +41,8 @@ const apiCall = async <T>(
   url: string,
   options: RequestInit = {}
 ): Promise<T> => {
-  const res = await fetch(url, {
+  const fullUrl = `${API_BASE_URL}${url}`;
+  const res = await fetch(fullUrl, {
     ...options,
     headers: {
       ...getAuthHeaders(),
@@ -134,7 +140,7 @@ export const analyzeFoodImage = async (
       : "UTC"
   );
 
-  const res = await fetch("/api/analyze-food-image", {
+  const res = await fetch(`${API_BASE_URL}/api/analyze-food-image`, {
     method: "POST",
     headers: {
       Authorization: authToken ? `Bearer ${authToken}` : "",
@@ -202,6 +208,6 @@ export const updateSettings = async (
 // ============ Health Check ============
 
 export const healthCheck = async (): Promise<{ status: string }> => {
-  const res = await fetch("/api/health");
+  const res = await fetch(`${API_BASE_URL}/api/health`);
   return res.json();
 };
