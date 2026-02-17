@@ -129,6 +129,8 @@ export const analyzeFoodImage = async (
   imageFile: File,
   context: string = ""
 ): Promise<ParseResult> => {
+  console.log('[apiService] analyzeFoodImage called with file:', imageFile.name, 'size:', imageFile.size, 'type:', imageFile.type);
+
   const formData = new FormData();
   formData.append("image", imageFile);
   formData.append("context", context);
@@ -140,7 +142,10 @@ export const analyzeFoodImage = async (
       : "UTC"
   );
 
-  const res = await fetch(`${API_BASE_URL}/api/analyze-food-image`, {
+  const url = `${API_BASE_URL}/api/analyze-food-image`;
+  console.log('[apiService] Sending request to:', url);
+
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       Authorization: authToken ? `Bearer ${authToken}` : "",
@@ -148,12 +153,17 @@ export const analyzeFoodImage = async (
     body: formData,
   });
 
+  console.log('[apiService] Response status:', res.status, res.statusText);
+
   if (!res.ok) {
     const errText = await res.text().catch(() => "");
+    console.error('[apiService] Error response:', errText);
     throw new Error(errText || `API error (${res.status})`);
   }
 
-  return res.json() as Promise<ParseResult>;
+  const result = await res.json();
+  console.log('[apiService] Success response:', result);
+  return result as ParseResult;
 };
 
 // ============ Food Entries ============

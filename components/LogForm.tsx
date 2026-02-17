@@ -92,10 +92,12 @@ export const LogForm: React.FC<Props> = ({ onAddEntry, currentDate, isDisabled =
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    console.log('[LogForm] Image selected:', file?.name, file?.type, file?.size);
     if (file) {
       setSelectedImage(file);
       const reader = new FileReader();
       reader.onload = () => {
+        console.log('[LogForm] Image preview loaded, base64 length:', (reader.result as string)?.length);
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
@@ -113,10 +115,14 @@ export const LogForm: React.FC<Props> = ({ onAddEntry, currentDate, isDisabled =
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('[LogForm] handleSubmit called, inputMode:', inputMode, 'selectedImage:', selectedImage?.name, 'isDisabled:', isDisabled);
     if (isDisabled) return;
 
     if (inputMode === 'text' && !input.trim()) return;
-    if (inputMode === 'image' && !selectedImage) return;
+    if (inputMode === 'image' && !selectedImage) {
+      console.log('[LogForm] Returning early - no selected image');
+      return;
+    }
 
     const isClarificationAnswer = Boolean(clarificationContext);
     const textToSend = isClarificationAnswer
@@ -151,7 +157,9 @@ export const LogForm: React.FC<Props> = ({ onAddEntry, currentDate, isDisabled =
 
       if (inputMode === 'image' && selectedImage) {
         // Image analysis
+        console.log('[LogForm] Calling analyzeFoodImage with file:', selectedImage.name, 'context:', imageContext);
         result = await analyzeFoodImage(selectedImage, imageContext);
+        console.log('[LogForm] analyzeFoodImage result:', result);
         // Store image for entry
         if (imagePreview) {
           setPendingImageBase64(imagePreview);
@@ -176,7 +184,7 @@ export const LogForm: React.FC<Props> = ({ onAddEntry, currentDate, isDisabled =
         setClarificationContext(null);
       }
     } catch (error) {
-      console.error(error);
+      console.error('[LogForm] Error during submission:', error);
       setClarification("Sorry, something went wrong processing your request. Please try again.");
     } finally {
       setIsLoading(false);
